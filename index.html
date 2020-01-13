@@ -1,0 +1,48 @@
+<html lang="en">
+<script type="text/javascript">
+  window["_gaUserPrefs"] = {
+    ioo: function() {
+      return true;
+    }
+  }
+</script>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <head>
+    <!-- Comment -->
+    <title> Gong Fu Timer </title>
+
+    <style type="text/css">
+      canvas {
+        padding: 0;
+        margin: auto;
+        display: block;
+      }
+
+      .centred {
+        margin: auto;
+      }
+    </style>
+
+    <!--<link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico" /> -->
+  </head>
+
+<body>
+  <h2>Gong Fu Timer</h2>
+  <h1 id="time">0</h1>
+  <input type="number" id="baseSecs" name="Base Secs" min="0" value="0" step="1">
+  <input type="number" id="plusSecs" name="+ Secs" min="0" value="0" step="1">
+  <input type="number" id="infNum" name="Infusions" min="0" value="0" step="1">
+  <br />
+  <button type="button" id="btnBaseSecs">Start</button>
+  <button type="reset">Reset</button>
+
+  <div class="centred">
+    <script type="text/javascript" src="gongfutimer.js"></script>
+  </div>
+
+</body>
+
+</html>
