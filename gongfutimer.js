@@ -105,7 +105,8 @@ function Main() {
 
   window.addEventListener("resize", function (evt) {}, false);
 
-  document.getElementById("btnBaseSecs").addEventListener("click", startTimer);
+  document.getElementById("btnStart").addEventListener("click", startTimer);
+  document.getElementById("btnReset").addEventListener("click", resetTimer);
   
   document.getElementById("time").innerHTML = formatTimerOutput(0);
 
@@ -153,6 +154,12 @@ function startTimer() {
   infNum++;
 
   document.getElementById("infNum").value = infNum;
+}
+
+function resetTimer() {
+  TEATIMER.stop();
+  document.getElementById("time").innerHTML = formatTimerOutput(0);
+  document.getElementById("infNum").value = 0;
 }
 
 function detectMob() {
