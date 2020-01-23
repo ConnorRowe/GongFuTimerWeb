@@ -25,7 +25,7 @@
 			currentTime = this.endTime;
 		}
 
-		return currentTime - currentTime;
+		return currentTime - this.startTime;
 	}
 
 	elapsedSeconds(): number {
@@ -145,11 +145,11 @@ function startTimer() {
 	var baseSecs: number = parseInt((<HTMLInputElement>document.getElementById("baseSecs")).value);
 	var plusSecs: number = parseInt((<HTMLInputElement>document.getElementById("plusSecs")).value);
 	var infNum: number = parseInt((<HTMLInputElement>document.getElementById("infNum")).value);
-	infNum++;
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
 	TEATIMER.start();
 
+	infNum++;
 	(<HTMLInputElement>document.getElementById("infNum")).value = infNum.toString();
 }
 

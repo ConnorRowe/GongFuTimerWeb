@@ -20,7 +20,7 @@ var Timer = /** @class */ (function () {
         else {
             currentTime = this.endTime;
         }
-        return currentTime - currentTime;
+        return currentTime - this.startTime;
     };
     Timer.prototype.elapsedSeconds = function () {
         return this.elapsedMilliseconds() / 1000.0;
@@ -115,9 +115,9 @@ function startTimer() {
     var baseSecs = parseInt(document.getElementById("baseSecs").value);
     var plusSecs = parseInt(document.getElementById("plusSecs").value);
     var infNum = parseInt(document.getElementById("infNum").value);
-    infNum++;
     TARGETSECS = baseSecs + (plusSecs * infNum);
     TEATIMER.start();
+    infNum++;
     document.getElementById("infNum").value = infNum.toString();
 }
 function resetTimer() {

@@ -131,6 +131,7 @@
     color: #fef6ff;
     text-align: center;
     vertical-align: middle;
+    margin-bottom: 8vmin;
 }
 
 .input-table-head {
@@ -148,6 +149,8 @@
 .timer {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 56px;
+    margin-top: 6vmin;
+    margin-bottom: 6vmin;
 }
 
 body {
@@ -182,6 +185,6 @@ input[type=number] {
     }
 
     .header {
-        height: 400px;
+        height: 72vh;
     }
 }
