@@ -4,7 +4,6 @@
 	isRunning: boolean = false;
 
 	constructor() {
-		this.restart();
 	}
 
 	start() {
@@ -26,7 +25,7 @@
 			currentTime = this.endTime;
 		}
 
-		return currentTime - this.endTime;
+		return currentTime - currentTime;
 	}
 
 	elapsedSeconds(): number {
@@ -57,6 +56,10 @@ var TIMESECS: number = 0;			//total time (in seconds)
 var TIMEFRAC: number = 0;			//time remainder in seconds (0.0 - 1.0)
 var TARGETSECS: number = 0;			//time calculated for the brew
 var TEATIMER: Timer = new Timer();	//Timer object handling the actual tea timer
+
+//Sound
+const sndComplete: HTMLAudioElement = new Audio("audio/Alarm.wav");
+sndComplete.autoplay = false;
 
 function Main() {
 	ISMOBILE = detectMob();
@@ -127,6 +130,7 @@ function Update() {
 		//Timer complete
 		TEATIMER.stop();
 		document.getElementById("time").innerHTML = formatTimerOutput(0);
+		sndComplete.play();
 	}
 }
 
@@ -138,14 +142,13 @@ function Draw() {
 }
 
 function startTimer() {
-	var baseSecs: number = parseInt((<HTMLInputElement>document.getElementById("baseSecs")).value, 10);
-	var plusSecs: number = parseInt((<HTMLInputElement>document.getElementById("plusSecs")).value, 10);
-	var infNum: number = parseInt((<HTMLInputElement>document.getElementById("infNum")).value, 10);
+	var baseSecs: number = parseInt((<HTMLInputElement>document.getElementById("baseSecs")).value);
+	var plusSecs: number = parseInt((<HTMLInputElement>document.getElementById("plusSecs")).value);
+	var infNum: number = parseInt((<HTMLInputElement>document.getElementById("infNum")).value);
+	infNum++;
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
 	TEATIMER.start();
-
-	infNum++;
 
 	(<HTMLInputElement>document.getElementById("infNum")).value = infNum.toString();
 }

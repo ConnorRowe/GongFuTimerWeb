@@ -3,7 +3,6 @@ var Timer = /** @class */ (function () {
         this.startTime = 0;
         this.endTime = 0;
         this.isRunning = false;
-        this.restart();
     }
     Timer.prototype.start = function () {
         this.startTime = TIME;
@@ -21,7 +20,7 @@ var Timer = /** @class */ (function () {
         else {
             currentTime = this.endTime;
         }
-        return currentTime - this.endTime;
+        return currentTime - currentTime;
     };
     Timer.prototype.elapsedSeconds = function () {
         return this.elapsedMilliseconds() / 1000.0;
@@ -48,6 +47,9 @@ var TIMESECS = 0; //total time (in seconds)
 var TIMEFRAC = 0; //time remainder in seconds (0.0 - 1.0)
 var TARGETSECS = 0; //time calculated for the brew
 var TEATIMER = new Timer(); //Timer object handling the actual tea timer
+//Sound
+var sndComplete = new Audio("audio/Alarm.wav");
+sndComplete.autoplay = false;
 function Main() {
     ISMOBILE = detectMob();
     // these listeners will keep track of keyboard presses
@@ -100,6 +102,7 @@ function Update() {
         //Timer complete
         TEATIMER.stop();
         document.getElementById("time").innerHTML = formatTimerOutput(0);
+        sndComplete.play();
     }
 }
 function Draw() {
@@ -109,12 +112,12 @@ function Draw() {
     }
 }
 function startTimer() {
-    var baseSecs = parseInt(document.getElementById("baseSecs").value, 10);
-    var plusSecs = parseInt(document.getElementById("plusSecs").value, 10);
-    var infNum = parseInt(document.getElementById("infNum").value, 10);
+    var baseSecs = parseInt(document.getElementById("baseSecs").value);
+    var plusSecs = parseInt(document.getElementById("plusSecs").value);
+    var infNum = parseInt(document.getElementById("infNum").value);
+    infNum++;
     TARGETSECS = baseSecs + (plusSecs * infNum);
     TEATIMER.start();
-    infNum++;
     document.getElementById("infNum").value = infNum.toString();
 }
 function resetTimer() {
