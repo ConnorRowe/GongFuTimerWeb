@@ -1,112 +1,98 @@
 ﻿<html lang="en">
 <script type="text/javascript">
-  window["_gaUserPrefs"] = {
-    ioo: function() {
-      return true;
+    window["_gaUserPrefs"] = {
+        ioo: function () {
+            return true;
+        }
     }
-  }
 </script>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
-  <link rel='stylesheet' href='styles.css' />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <link rel='stylesheet' href='styles.css' />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono" />
 
-  <!-- Comment -->
-  <title> Gong Fu Timer </title>
+    <!-- Comment -->
+    <title> Gong Fu Timer </title>
 
-  <style type="text/css">
-    .centred {
-      margin: auto;
-    }
+    <style type="text/css">
+        .centred {
+            margin: auto;
+        }
 
-    .title {
-      color: #F3F3EA;
-    }
+        .title {
+            color: #F3F3EA;
+        }
 
-    input[type=number] {
-      height: 40;
-      width: 40;
-      font-family: 'Open Sans', serif;
-      font-size: 16;
-      text-align: center;
-    }
+        h1 {
+            font-family: 'Raleway', serif;
+            font-size: 40px;
+        }
+    </style>
 
-
-    h1 {
-      font-family: 'Raleway', serif;
-      font-size: 40px;
-    }
-
-    body {
-      font-family: 'Open Sans', serif;
-      font-size: 14px;
-    }
-  </style>
-
-  <!--<link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico" /> -->
+    <!--<link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico" /> -->
 </head>
 
 <body class="sides">
-  <div class='page'>
-    <div class='section menu'>
-      <img class="title" width="80" height="80" src='images/teapot-leaves.svg' />
-      <h1 class="title">Gong Fu Timer</h1>
-    </div>
-    <div class='section header'>
-      <h2>Timer</h2>
-      <br />
-      <h1 class="timer" id="time">0</h1>
-      <br />
-      
-      <div class="section input">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th class="input-table-head__th">Water<br>Temp</th>
-              <th class="input-table-head__th">Amount<br>per 100ml</th>
-              <th class="input-table-head__th">1st Infusion<br>Secs</th>
-              <th class="input-table-head__th">+ Infusion<br>Secs</th>
-              <th class="input-table-head__th">Number of<br>Infusions</th>         
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="input-table-head__td"><img width="56" height="56" src='images/thermometer-hot.svg' /></td>
-              <td class="input-table-head__td"><img width="56" height="56" src='images/teapot.svg' /></td>
-              <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch.svg' /></td>
-              <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch-plus.svg' /></td>
-              <td class="input-table-head__td"><img width="56" height="56" src='images/drop.svg' /></td>
-            </tr>
-            <tr>
-              <td class="input-table-head__td"></td>
-              <td class="input-table-head__td"></td>
-              <td class="input-table-head__td"><input width="10" type="number" id="baseSecs" name="Base Secs" min="0" value="0" step="1"></td>
-              <td class="input-table-head__td"><input size="10" type="number" id="plusSecs" name="+ Secs" min="0" value="0" step="1"></td>
-              <td class="input-table-head__td"><input size="10" type="number" id="infNum" name="Infusions" min="0" value="0" step="1"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <button type="button" id="btnStart">Start</button>
-      <button type="reset" id="btnReset">Reset</button>
-    </div>
-    <div class='section presets'>
-      <h2>Presets PH</h2>
-    </div>
-    <div class='section about'>
-      <h2>About PH</h2>
-      <p>by Connor Magson</p>
-    </div>
-  </div>
+    <div class='page'>
+        <div class='section menu'>
+            <img class="title" width="80" height="80" src='images/teapot-leaves.svg' />
+            <h1 class="title">Gong Fu Timer</h1>
+        </div>
+        <div class='section header'>
+            <h2>Timer</h2>
+            <br />
+            <h1 class="timer" id="time">0</h1>
+            <br />
 
-  <div class="centred">
-    <script type="text/javascript" src="gongfutimer.js"></script>
-  </div>
+            <div class="section input">
+                <table class="input-table">
+                    <thead>
+                        <tr>
+                            <th class="input-table-head__th">Water<br>Temp</th>
+                            <th class="input-table-head__th">Amount<br>per 100ml</th>
+                            <th class="input-table-head__th">1st Infusion<br>Secs</th>
+                            <th class="input-table-head__th">+ Infusion<br>Secs</th>
+                            <th class="input-table-head__th">Number of<br>Infusions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="input-table-head__td"><img width="56" height="56" src='images/thermometer-hot.svg' /></td>
+                            <td class="input-table-head__td"><img width="56" height="56" src='images/teapot.svg' /></td>
+                            <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch.svg' /></td>
+                            <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch-plus.svg' /></td>
+                            <td class="input-table-head__td"><img width="56" height="56" src='images/drop.svg' /></td>
+                        </tr>
+                        <tr>
+                            <td class="input-table-head__td"></td>
+                            <td class="input-table-head__td"></td>
+                            <td class="input-table-head__td"><input width="10" type="number" id="baseSecs" name="Base Secs" min="0" value="0" step="1"></td>
+                            <td class="input-table-head__td"><input size="10" type="number" id="plusSecs" name="+ Secs" min="0" value="0" step="1"></td>
+                            <td class="input-table-head__td"><input size="10" type="number" id="infNum" name="Infusions" min="0" value="0" step="1"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" id="btnStart">Start</button>
+            <button type="reset" id="btnReset">Reset</button>
+        </div>
+        <div class='section presets'>
+            <h2>Presets PH</h2>
+        </div>
+        <div class='section about'>
+            <h2>About PH</h2>
+            <p>by Connor Magson</p>
+        </div>
+    </div>
+
+    <div class="centred">
+        <script type="text/javascript" src="gongfutimer.js"></script>
+    </div>
 
 </body>
 
