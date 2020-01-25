@@ -49,7 +49,6 @@ var TARGETSECS = 0; //time calculated for the brew
 var TEATIMER = new Timer(); //Timer object handling the actual tea timer
 //Sound
 var sndComplete = new Audio("audio/Alarm.wav");
-sndComplete.autoplay = false;
 function Main() {
     ISMOBILE = detectMob();
     // these listeners will keep track of keyboard presses
@@ -83,8 +82,10 @@ function Main() {
     document.getElementById("btnStart").addEventListener("click", startTimer);
     document.getElementById("btnReset").addEventListener("click", resetTimer);
     document.getElementById("time").innerHTML = formatTimerOutput(0);
+    document.getElementById("volumeSlider").addEventListener("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
+    sndComplete.volume;
 }
 //loop function
 function Loop(timeStamp) {

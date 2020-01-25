@@ -42,10 +42,8 @@
             <img class="title" width="80" height="80" src='images/teapot-leaves.svg' />
             <h1 class="title">Gong Fu Timer</h1>
         </div>
-        <div class='section header'>
-            <h2>Timer</h2>
-
-            <h1 class="timer" id="time">0</h1>
+        <div class='section timer'>
+            <h1 class="timer-text" id="time">0</h1>
 
             <div class="section input">
                 <table class="input-table">
@@ -60,11 +58,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="input-table-head__td"><img width="56" height="56" src='images/thermometer-hot.svg' /></td>
-                            <td class="input-table-head__td"><img width="56" height="56" src='images/teapot.svg' /></td>
-                            <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch.svg' /></td>
-                            <td class="input-table-head__td"><img width="56" height="56" src='images/stopwatch-plus.svg' /></td>
-                            <td class="input-table-head__td"><img width="56" height="56" src='images/drop.svg' /></td>
+                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/thermometer-hot.svg' /></td>
+                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/teapot.svg' /></td>
+                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch.svg' /></td>
+                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch-plus.svg' /></td>
+                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/drop.svg' /></td>
                         </tr>
                         <tr>
                             <td class="input-table-head__td"></td>
@@ -79,9 +77,17 @@
 
             <button type="button" id="btnStart">Start</button>
             <button type="reset" id="btnReset">Reset</button>
+
         </div>
         <div class='section presets'>
             <h2>Presets PH</h2>
+        </div>
+        <div class="section settings">
+            <h2>Settings</h2>
+            <div class="volume-container">
+                <h4>Alarm volume</h4>
+                <input class="volume-slider__input" type="range" min="0" max="1.0" value="0.8" id="volumeSlider" step="0.01" title="Volume"/>
+            </div>
         </div>
         <div class='section about'>
             <h2>About PH</h2>

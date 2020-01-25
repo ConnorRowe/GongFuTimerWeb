@@ -44,22 +44,21 @@
 }
 
 /// GLOBALS
-var KEYSTATE: Array<boolean> = new Array<boolean>();		//check the defined keypress
-var ISMOBILE: boolean = false;		//if running on mobile
-var CLIENTX: number;				//Client click / press position
-var CLIENTY: number;				//^
+var KEYSTATE: boolean[] = new Array<boolean>();		//check the defined keypress
+var ISMOBILE: boolean = false;						//if running on mobile
+var CLIENTX: number;								//Client click / press position
+var CLIENTY: number;								//^
 
 //Timing
-var TIME: number = 0;				//total time ms
-var DELTATIME: number = 0;			//time difference between last frames
-var TIMESECS: number = 0;			//total time (in seconds)
-var TIMEFRAC: number = 0;			//time remainder in seconds (0.0 - 1.0)
-var TARGETSECS: number = 0;			//time calculated for the brew
-var TEATIMER: Timer = new Timer();	//Timer object handling the actual tea timer
+var TIME: number = 0;								//total time ms
+var DELTATIME: number = 0;							//time difference between last frames
+var TIMESECS: number = 0;							//total time (in seconds)
+var TIMEFRAC: number = 0;							//time remainder in seconds (0.0 - 1.0)
+var TARGETSECS: number = 0;							//time calculated for the brew
+var TEATIMER: Timer = new Timer();					//Timer object handling the actual tea timer
 
 //Sound
 const sndComplete: HTMLAudioElement = new Audio("audio/Alarm.wav");
-sndComplete.autoplay = false;
 
 function Main() {
 	ISMOBILE = detectMob();
@@ -107,8 +106,12 @@ function Main() {
 
 	document.getElementById("time").innerHTML = formatTimerOutput(0);
 
+	document.getElementById("volumeSlider").addEventListener("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
+
 	//and here we begin the frame loop
 	window.requestAnimationFrame(Loop);
+
+	sndComplete.volume;
 }
 
 //loop function
