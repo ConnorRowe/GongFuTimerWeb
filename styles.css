@@ -140,14 +140,13 @@
 }
 
 .brew-guide__table {
-    max-width: 90%;
+    max-width: 90vw;
+    width: 90%;
     font-size: .75em;
     color: #fef6ff;
     text-align: center;
     vertical-align: middle;
     margin-bottom: 4vmin;
-    border-color: aliceblue;
-    border-width: 2px;
     justify-self: center;
 }
 
@@ -160,8 +159,9 @@
 .input-table-head__td,
 .input-table-head__th {
     position: relative;
-    padding: .25rem 1rem;
+    padding: .125rem 0.5rem;
     width: 20%;
+    text-align: center;
 }
 
 .input-button-container {
@@ -174,7 +174,7 @@
 .timer-text {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 56px;
-    margin-top: 6vmin;
+    margin-top: 1vmin;
     margin-bottom: 6vmin;
 }
 
@@ -218,7 +218,7 @@ button {
 @media only screen and (max-width: 400px) {
     body {
     }
-    
+
     h1 {
         font-size: 24px;
     }
