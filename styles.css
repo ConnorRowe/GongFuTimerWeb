@@ -94,6 +94,10 @@
     align-items: center;
 }
 
+.title {
+    color: #F3F3EA;
+}
+
 .menu {
     background-color: #845ec2;
     color: #fef6ff;
@@ -110,6 +114,7 @@
     flex-direction: row;
     align-items: center;
     max-height: 40%;
+    width: inherit;
 }
 
 .presets {
@@ -134,13 +139,16 @@
     flex-direction: column;
 }
 
-.input-table {
-    min-width: 80%;
+.brew-guide__table {
+    max-width: 90%;
     font-size: .75em;
     color: #fef6ff;
     text-align: center;
     vertical-align: middle;
-    margin-bottom: 8vmin;
+    margin-bottom: 4vmin;
+    border-color: aliceblue;
+    border-width: 2px;
+    justify-self: center;
 }
 
 .input-table-head {
@@ -152,7 +160,15 @@
 .input-table-head__td,
 .input-table-head__th {
     position: relative;
-    padding: .25rem 1rem
+    padding: .25rem 1rem;
+    width: 20%;
+}
+
+.input-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 80%;
 }
 
 .timer-text {
@@ -163,11 +179,15 @@
 }
 
 .volume-container {
-    width: 20vmin;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    width: 60%;
 }
 
 .volume-slider__input {
-    width: inherit;
 }
 
 body {
@@ -198,9 +218,14 @@ button {
 @media only screen and (max-width: 400px) {
     body {
     }
+    
+    h1 {
+        font-size: 24px;
+    }
 
-    .input-table {
-        max-width: 60%;
+    .input-table-head__td,
+    .input-table-head__th {
+        font-size: 0.6rem;
     }
 
     .timer {
@@ -208,17 +233,13 @@ button {
     }
 
     .brew-guide__img {
-        height: 10vmin;
-        width: 10vmin;
-    }
-
-    .volume-container {
-        width: 60vw;
+        height: 8vw;
+        width: 8vw;
     }
 
     input[type=number] {
-        height: 10vmin;
-        width: 10vmin;
+        height: 8vw;
+        width: 8vw;
     }
 
     button {

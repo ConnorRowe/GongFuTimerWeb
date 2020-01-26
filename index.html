@@ -23,13 +23,8 @@
             margin: auto;
         }
 
-        .title {
-            color: #F3F3EA;
-        }
-
         h1 {
             font-family: 'Raleway', serif;
-            font-size: 40px;
         }
     </style>
 
@@ -45,39 +40,37 @@
         <div class='section timer'>
             <h1 class="timer-text" id="time">0</h1>
 
-            <div class="section input">
-                <table class="input-table">
-                    <thead>
-                        <tr>
-                            <th class="input-table-head__th">Water<br>Temp</th>
-                            <th class="input-table-head__th">Amount<br>per 100ml</th>
-                            <th class="input-table-head__th">1st Infusion<br>Secs</th>
-                            <th class="input-table-head__th">+ Infusion<br>Secs</th>
-                            <th class="input-table-head__th">Number of<br>Infusions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/thermometer-hot.svg' /></td>
-                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/teapot.svg' /></td>
-                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch.svg' /></td>
-                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch-plus.svg' /></td>
-                            <td class="input-table-head__td"><img class="brew-guide__img" src='images/drop.svg' /></td>
-                        </tr>
-                        <tr>
-                            <td class="input-table-head__td"></td>
-                            <td class="input-table-head__td"></td>
-                            <td class="input-table-head__td"><input width="10" type="number" id="baseSecs" name="Base Secs" min="0" value="0" step="1"></td>
-                            <td class="input-table-head__td"><input size="10" type="number" id="plusSecs" name="+ Secs" min="0" value="0" step="1"></td>
-                            <td class="input-table-head__td"><input size="10" type="number" id="infNum" name="Infusions" min="0" value="0" step="1"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <table class="brew-guide__table">
+                <thead>
+                    <tr>
+                        <th class="input-table-head__th">Water<br>Temp</th>
+                        <th class="input-table-head__th">Amount<br>per 100ml</th>
+                        <th class="input-table-head__th">1st Infusion<br>Secs</th>
+                        <th class="input-table-head__th">+ Infusion<br>Secs</th>
+                        <th class="input-table-head__th">Number of<br>Infusions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="input-table-head__td"><img class="brew-guide__img" src='images/thermometer-hot.svg' /></td>
+                        <td class="input-table-head__td"><img class="brew-guide__img" src='images/teapot.svg' /></td>
+                        <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch.svg' /></td>
+                        <td class="input-table-head__td"><img class="brew-guide__img" src='images/stopwatch-plus.svg' /></td>
+                        <td class="input-table-head__td"><img class="brew-guide__img" src='images/drop.svg' /></td>
+                    </tr>
+                    <tr>
+                        <td class="input-table-head__td"></td>
+                        <td class="input-table-head__td"></td>
+                        <td class="input-table-head__td"><input width="10" type="number" id="baseSecs" name="Base Secs" min="0" value="0" step="1"></td>
+                        <td class="input-table-head__td"><input size="10" type="number" id="plusSecs" name="+ Secs" min="0" value="0" step="1"></td>
+                        <td class="input-table-head__td"><input size="10" type="number" id="infNum" name="Infusions" min="0" value="0" step="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="input-button-container">
+                <button type="button" id="btnStart">Start</button>
+                <button type="reset" id="btnReset">Reset</button>
             </div>
-
-            <button type="button" id="btnStart">Start</button>
-            <button type="reset" id="btnReset">Reset</button>
-
         </div>
         <div class='section presets'>
             <h2>Presets PH</h2>
@@ -86,7 +79,7 @@
             <h2>Settings</h2>
             <div class="volume-container">
                 <h4>Alarm volume</h4>
-                <input class="volume-slider__input" type="range" min="0" max="1.0" value="0.8" id="volumeSlider" step="0.01" title="Volume"/>
+                <input class="volume-slider__input" type="range" min="0" max="1.0" value="0.8" id="volumeSlider" step="0.01" title="Volume" />
             </div>
         </div>
         <div class='section about'>
