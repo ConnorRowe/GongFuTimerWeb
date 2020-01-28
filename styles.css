@@ -84,24 +84,32 @@
     display: flex;
     flex-wrap: wrap;
     overflow-x: hidden;
+    flex: 1 1 auto;
 }
 
 .section {
     width: 100%;
-    height: 300px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
-.title {
+.title__h {
     color: #F3F3EA;
+    margin: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.title__img {
+    width: 4rem;
+    height: 4rem;
 }
 
 .menu {
     background-color: #845ec2;
     color: #fef6ff;
-    height: 80px;
+    height: 4rem;
+    justify-content: center;
 }
 
 .timer {
@@ -137,6 +145,8 @@
     color: #fef6ff;
     order: 3;
     flex-direction: column;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .brew-guide__table {
@@ -219,10 +229,6 @@ button {
     body {
     }
 
-    h1 {
-        font-size: 24px;
-    }
-
     .input-table-head__td,
     .input-table-head__th {
         font-size: 0.6rem;
@@ -249,10 +255,6 @@ button {
 
 /* Tablet Styles */
 @media only screen and (min-width: 401px) and (max-width: 960px) {
-    .timer {
-        height: 64vh;
-    }
-
     .brew-guide__img {
         height: 10vmin;
         width: 10vmin;
@@ -264,9 +266,5 @@ button {
     .page {
         width: 960px;
         margin: 0 auto;
-    }
-
-    .timer {
-        height: 64vh;
     }
 }
