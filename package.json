@@ -1,0 +1,26 @@
+{
+  "name": "gongfutimerweb",
+  "version": "1.0.0",
+  "description": "A small web app to help time your gong fu cha sessions.",
+  "main": "gongfutimer.js",
+  "dependencies": {
+    "@types/jquery": "^3.3.31"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConnorRowe/GongFuTimerWeb.git"
+  },
+  "keywords": [
+    "typescipt"
+  ],
+  "author": "ConnorRowe",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ConnorRowe/GongFuTimerWeb/issues"
+  },
+  "homepage": "https://github.com/ConnorRowe/GongFuTimerWeb#readme"
+}

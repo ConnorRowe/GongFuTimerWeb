@@ -43,6 +43,16 @@
 	}
 }
 
+interface Preset {
+	name: string;
+	altName: string;
+	temp: number;
+	amount: number;
+	baseSecs: number;
+	plusSecs: number;
+	infusions: number;
+}
+
 /// GLOBALS
 var KEYSTATE: boolean[] = new Array<boolean>();		//check the defined keypress
 var ISMOBILE: boolean = false;						//if running on mobile
@@ -101,17 +111,26 @@ function Main() {
 
 	window.addEventListener("resize", function (evt) { }, false);
 
-	document.getElementById("btnStart").addEventListener("click", startTimer);
-	document.getElementById("btnReset").addEventListener("click", resetTimer);
+	$("#btnStart")[0].addEventListener("click", startTimer);
+	$("#btnReset")[0].addEventListener("click", resetTimer);
 
-	document.getElementById("time").innerHTML = formatTimerOutput(0);
+	$("#time")[0].innerHTML = formatTimerOutput(0);
 
-	document.getElementById("volumeSlider").addEventListener("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
+	$("#volumeSlider")[0].addEventListener("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
+
+	//get new preset modal
+	var modal = $("#newPresetModal");
+	//get button to open it
+	var btnNewPreset = $("#btnNewPreset")[0];
+	//get close span
+	var span = $(".close")[0];
+
+	//open modal on click
+	btnNewPreset.addEventListener("click", () => { modal.css("display", "block"); });
+	span.addEventListener("click", () => { modal.css("display", "none"); });
 
 	//and here we begin the frame loop
 	window.requestAnimationFrame(Loop);
-
-	sndComplete.volume;
 }
 
 //loop function
@@ -132,7 +151,7 @@ function Update() {
 	if (TARGETSECS - TEATIMER.elapsedSeconds() <= 0 && TEATIMER.isRunning) {
 		//Timer complete
 		TEATIMER.stop();
-		document.getElementById("time").innerHTML = formatTimerOutput(0);
+		$("#time").html(formatTimerOutput(0));
 		sndComplete.play();
 	}
 }
@@ -140,26 +159,26 @@ function Update() {
 function Draw() {
 	if (TEATIMER.isRunning) {
 		//update timer display
-		document.getElementById("time").innerHTML = formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds());
+		$("#time").html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
 	}
 }
 
 function startTimer() {
-	var baseSecs: number = parseInt((<HTMLInputElement>document.getElementById("baseSecs")).value);
-	var plusSecs: number = parseInt((<HTMLInputElement>document.getElementById("plusSecs")).value);
-	var infNum: number = parseInt((<HTMLInputElement>document.getElementById("infNum")).value);
+	var baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
+	var plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
+	var infNum: number = parseInt((<HTMLInputElement>$("#infNum")[0]).value);
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
 	TEATIMER.start();
 
 	infNum++;
-	(<HTMLInputElement>document.getElementById("infNum")).value = infNum.toString();
+	(<HTMLInputElement>$("#infNum")[0]).value = infNum.toString();
 }
 
 function resetTimer() {
 	TEATIMER.stop();
-	document.getElementById("time").innerHTML = formatTimerOutput(0);
-	(<HTMLInputElement>document.getElementById("infNum")).value = "0";
+	$("#time").html(formatTimerOutput(0));
+	(<HTMLInputElement>$("#infNum")[0]).value = "0";
 }
 
 function detectMob() {

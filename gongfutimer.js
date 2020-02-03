@@ -79,13 +79,21 @@ function Main() {
     //resize mobile canvas size
     document.addEventListener("orientationchange", function (evt) { }, false);
     window.addEventListener("resize", function (evt) { }, false);
-    document.getElementById("btnStart").addEventListener("click", startTimer);
-    document.getElementById("btnReset").addEventListener("click", resetTimer);
-    document.getElementById("time").innerHTML = formatTimerOutput(0);
-    document.getElementById("volumeSlider").addEventListener("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
+    $("#btnStart")[0].addEventListener("click", startTimer);
+    $("#btnReset")[0].addEventListener("click", resetTimer);
+    $("#time")[0].innerHTML = formatTimerOutput(0);
+    $("#volumeSlider")[0].addEventListener("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
+    //get new preset modal
+    var modal = $("#newPresetModal");
+    //get button to open it
+    var btnNewPreset = $("#btnNewPreset")[0];
+    //get close span
+    var span = $(".close")[0];
+    //open modal on click
+    btnNewPreset.addEventListener("click", function () { modal.css("display", "block"); });
+    span.addEventListener("click", function () { modal.css("display", "none"); });
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
-    sndComplete.volume;
 }
 //loop function
 function Loop(timeStamp) {
@@ -102,29 +110,29 @@ function Update() {
     if (TARGETSECS - TEATIMER.elapsedSeconds() <= 0 && TEATIMER.isRunning) {
         //Timer complete
         TEATIMER.stop();
-        document.getElementById("time").innerHTML = formatTimerOutput(0);
+        $("#time").html(formatTimerOutput(0));
         sndComplete.play();
     }
 }
 function Draw() {
     if (TEATIMER.isRunning) {
         //update timer display
-        document.getElementById("time").innerHTML = formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds());
+        $("#time").html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
     }
 }
 function startTimer() {
-    var baseSecs = parseInt(document.getElementById("baseSecs").value);
-    var plusSecs = parseInt(document.getElementById("plusSecs").value);
-    var infNum = parseInt(document.getElementById("infNum").value);
+    var baseSecs = parseInt($("#baseSecs")[0].value);
+    var plusSecs = parseInt($("#plusSecs")[0].value);
+    var infNum = parseInt($("#infNum")[0].value);
     TARGETSECS = baseSecs + (plusSecs * infNum);
     TEATIMER.start();
     infNum++;
-    document.getElementById("infNum").value = infNum.toString();
+    $("#infNum")[0].value = infNum.toString();
 }
 function resetTimer() {
     TEATIMER.stop();
-    document.getElementById("time").innerHTML = formatTimerOutput(0);
-    document.getElementById("infNum").value = "0";
+    $("#time").html(formatTimerOutput(0));
+    $("#infNum")[0].value = "0";
 }
 function detectMob() {
     if (navigator.userAgent.match(/Android/i) ||
