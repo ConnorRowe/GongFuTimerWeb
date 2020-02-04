@@ -17,7 +17,7 @@
 	}
 
 	elapsedMilliseconds(): number {
-		var currentTime: number;
+		let currentTime: number;
 
 		if (this.isRunning) {
 			currentTime = TIME;
@@ -119,11 +119,11 @@ function Main() {
 	$("#volumeSlider")[0].addEventListener("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
 
 	//get new preset modal
-	var modal = $("#newPresetModal");
+	let modal = $("#newPresetModal");
 	//get button to open it
-	var btnNewPreset = $("#btnNewPreset")[0];
+	let btnNewPreset = $("#btnNewPreset")[0];
 	//get close span
-	var span = $(".close")[0];
+	let span = $(".close")[0];
 
 	//open modal on click
 	btnNewPreset.addEventListener("click", () => { modal.css("display", "block"); });
@@ -164,9 +164,9 @@ function Draw() {
 }
 
 function startTimer() {
-	var baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
-	var plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
-	var infNum: number = parseInt((<HTMLInputElement>$("#infNum")[0]).value);
+	let baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
+	let plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
+	let infNum: number = parseInt((<HTMLInputElement>$("#infNum")[0]).value);
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
 	TEATIMER.start();
@@ -197,9 +197,9 @@ function detectMob() {
 }
 
 function formatTimerOutput(time) {
-	var minutes = 0;
-	var seconds = time;
-	var milliseconds = 0.0;
+	let minutes = 0;
+	let seconds = time;
+	let milliseconds = 0.0;
 
 	if (seconds >= 60) {
 		minutes = seconds / 60;
@@ -211,9 +211,9 @@ function formatTimerOutput(time) {
 	seconds = Math.floor(seconds);
 	milliseconds = Math.floor(milliseconds);
 
-	var m = minutes.toString();
-	var s = seconds.toString();
-	var ms = milliseconds.toString();
+	let m = minutes.toString();
+	let s = seconds.toString();
+	let ms = milliseconds.toString();
 
 	if (minutes < 10) {
 		m = "0" + m;
