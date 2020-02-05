@@ -35,6 +35,18 @@ var Timer = /** @class */ (function () {
     };
     return Timer;
 }());
+function CreatePreset(config) {
+    var newPreset = { ID: config.ID, name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
+    return newPreset;
+}
+function GeneratePresetContainer(preset) {
+    var container = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
+    container += "<h2 class='preset-name'><span itemprop='name'>" + preset.name + "</span></h2>\n";
+    container += "<h3 itemprop='altname' class='preset-alt-name'> " + preset.altName + "</h3>\n";
+    container += "<span itemprop='desciption' class='preset-desc'>" + preset.description + "</span>\n";
+    container += "</div>\n";
+    return container;
+}
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
 var ISMOBILE = false; //if running on mobile
@@ -49,6 +61,9 @@ var TARGETSECS = 0; //time calculated for the brew
 var TEATIMER = new Timer(); //Timer object handling the actual tea timer
 //Sound
 var sndComplete = new Audio("audio/Alarm.wav");
+//Preset stuff
+var PRESETS = new Array();
+PRESETS.push(CreatePreset({ ID: 0, name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
 function Main() {
     ISMOBILE = detectMob();
     // these listeners will keep track of keyboard presses
@@ -79,19 +94,24 @@ function Main() {
     //resize mobile canvas size
     document.addEventListener("orientationchange", function (evt) { }, false);
     window.addEventListener("resize", function (evt) { }, false);
-    $("#btnStart")[0].addEventListener("click", startTimer);
-    $("#btnReset")[0].addEventListener("click", resetTimer);
-    $("#time")[0].innerHTML = formatTimerOutput(0);
-    $("#volumeSlider")[0].addEventListener("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
+    $("#btnStart").click(startTimer);
+    $("#btnReset").click(resetTimer);
+    $("#time").html(formatTimerOutput(0));
+    $("#volumeSlider").bind("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
     //get new preset modal
     var modal = $("#newPresetModal");
     //get button to open it
-    var btnNewPreset = $("#btnNewPreset")[0];
+    var btnNewPreset = $("#btnNewPreset");
     //get close span
-    var span = $(".close")[0];
+    var span = $(".close");
     //open modal on click
-    btnNewPreset.addEventListener("click", function () { modal.css("display", "block"); });
-    span.addEventListener("click", function () { modal.css("display", "none"); });
+    btnNewPreset.click(function () { modal.css("display", "block"); });
+    span.click(function () { modal.css("display", "none"); });
+    var presetCntnr = $("#presetsContainer");
+    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
 }

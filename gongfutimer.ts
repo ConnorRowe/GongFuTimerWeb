@@ -44,15 +44,33 @@
 }
 
 interface Preset {
+	ID: number;
 	name: string;
 	altName: string;
+	description: string;
 	temp: number;
 	amount: number;
 	baseSecs: number;
 	plusSecs: number;
 	infusions: number;
+	teaType: string;
 }
 
+function CreatePreset(config: Preset): { ID: number; name: string; altName: string; description: string; temp: number; amount: number; baseSecs: number; plusSecs: number; infusions: number; teaType: string } {
+	const newPreset: Preset = { ID: config.ID, name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
+
+	return newPreset;
+}
+
+function GeneratePresetContainer(preset: Preset) {
+	let container: string = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
+	container += "<h2 class='preset-name'><span itemprop='name'>" + preset.name + "</span></h2>\n";
+	container += "<h3 itemprop='altname' class='preset-alt-name'> " + preset.altName + "</h3>\n";
+	container += "<span itemprop='desciption' class='preset-desc'>" + preset.description + "</span>\n";
+	container += "</div>\n";
+
+	return container;
+}
 /// GLOBALS
 var KEYSTATE: boolean[] = new Array<boolean>();		//check the defined keypress
 var ISMOBILE: boolean = false;						//if running on mobile
@@ -69,6 +87,10 @@ var TEATIMER: Timer = new Timer();					//Timer object handling the actual tea ti
 
 //Sound
 const sndComplete: HTMLAudioElement = new Audio("audio/Alarm.wav");
+
+//Preset stuff
+var PRESETS: Preset[] = new Array<Preset>();
+PRESETS.push(CreatePreset({ ID: 0, name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
 
 function Main() {
 	ISMOBILE = detectMob();
@@ -105,29 +127,34 @@ function Main() {
 		CLIENTY = null;
 	}, false);
 
-
 	//resize mobile canvas size
 	document.addEventListener("orientationchange", function (evt) { }, false);
-
 	window.addEventListener("resize", function (evt) { }, false);
 
-	$("#btnStart")[0].addEventListener("click", startTimer);
-	$("#btnReset")[0].addEventListener("click", resetTimer);
+	$("#btnStart").click(startTimer);
+	$("#btnReset").click(resetTimer);
 
-	$("#time")[0].innerHTML = formatTimerOutput(0);
+	$("#time").html(formatTimerOutput(0));
 
-	$("#volumeSlider")[0].addEventListener("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
+	$("#volumeSlider").bind("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
 
 	//get new preset modal
-	let modal = $("#newPresetModal");
+	const modal = $("#newPresetModal");
 	//get button to open it
-	let btnNewPreset = $("#btnNewPreset")[0];
+	const btnNewPreset = $("#btnNewPreset");
 	//get close span
-	let span = $(".close")[0];
+	const span = $(".close");
 
 	//open modal on click
-	btnNewPreset.addEventListener("click", () => { modal.css("display", "block"); });
-	span.addEventListener("click", () => { modal.css("display", "none"); });
+	btnNewPreset.click(() => { modal.css("display", "block"); });
+	span.click(() => { modal.css("display", "none"); });
+
+	let presetCntnr = $("#presetsContainer");
+
+	presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+	presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+	presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+	presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
 
 	//and here we begin the frame loop
 	window.requestAnimationFrame(Loop);
@@ -164,8 +191,8 @@ function Draw() {
 }
 
 function startTimer() {
-	let baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
-	let plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
+	const baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
+	const plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
 	let infNum: number = parseInt((<HTMLInputElement>$("#infNum")[0]).value);
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
