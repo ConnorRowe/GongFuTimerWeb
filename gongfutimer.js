@@ -41,9 +41,9 @@ function CreatePreset(config) {
 }
 function GeneratePresetContainer(preset) {
     var container = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
-    container += "<h2 class='preset-name'><span itemprop='name'>" + preset.name + "</span></h2>\n";
-    container += "<h3 itemprop='altname' class='preset-alt-name'> " + preset.altName + "</h3>\n";
-    container += "<span itemprop='desciption' class='preset-desc'>" + preset.description + "</span>\n";
+    container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
+    container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
+    container += "<span class='preset-desc'>" + preset.description + "</span>\n";
     container += "</div>\n";
     return container;
 }
@@ -63,7 +63,11 @@ var TEATIMER = new Timer(); //Timer object handling the actual tea timer
 var sndComplete = new Audio("audio/Alarm.wav");
 //Preset stuff
 var PRESETS = new Array();
+//Adding presets manually for testing purposes before the form is implemented
 PRESETS.push(CreatePreset({ ID: 0, name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
+PRESETS.push(CreatePreset({ ID: 1, name: "Imperial Green - Pre Qing Ming", altName: "Long Jing - Dragonwell", description: "Pre Qing Ming harvest of one of China’s most famous teas. Deep, rich and aromatic with roasted borlotti beans, sweet limoncello and strawberry jam aromatics.", temp: 80, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "green" }));
+PRESETS.push(CreatePreset({ ID: 2, name: "Amber Mountain", altName: "Huo Shan Huang Ya", description: "Smooth and elegant tea made in small batches. Morning dew, fresh cut grass, green beans with a light and warming pear sweetness.", temp: 70, amount: 5, baseSecs: 45, plusSecs: 10, infusions: 5, teaType: "yellow" }));
+PRESETS.push(CreatePreset({ ID: 3, name: "Alishan Cream", altName: "Alishan Jin Xuan", description: "A rich and luxurious tea made from the naturally milky Jin Xuan cultivar. Malted milkshake, high mountain grass, alpine rhododendrons and cream.", temp: 95, amount: 6, baseSecs: 20, plusSecs: 5, infusions: 9, teaType: "oolong" }));
 function Main() {
     ISMOBILE = detectMob();
     // these listeners will keep track of keyboard presses
@@ -107,11 +111,15 @@ function Main() {
     //open modal on click
     btnNewPreset.click(function () { modal.css("display", "block"); });
     span.click(function () { modal.css("display", "none"); });
+    //get preset container div
     var presetCntnr = $("#presetsContainer");
-    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
-    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
-    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
-    presetCntnr.prepend(GeneratePresetContainer(PRESETS[0]));
+    //convert the PRESETS array into JSON in cookie format and save to document cookies
+    var presetsJSON = "presets=" + JSON.stringify(PRESETS) + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+    document.cookie = presetsJSON;
+    //load Preset data from the document cookies into an array
+    var loadedPresets = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+    //create HTML elements for each preset in the array
+    loadedPresets.forEach(function (p) { presetCntnr.prepend(GeneratePresetContainer(p)); });
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
 }
