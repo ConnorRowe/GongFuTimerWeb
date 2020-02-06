@@ -164,8 +164,9 @@
     -ms-flex-pack: justify;
     justify-content: space-between;
     border-top: .25rem solid;
-    height: 16rem;
+    height: 20rem;
     width: calc(25% - 2rem);
+    max-width: calc(25% - 2rem);
     margin: 0 .9995rem;
 }
 
@@ -227,6 +228,10 @@
 
 .preset-desc {
     font-size: .90rem;
+}
+
+.preset-select-button {
+    width: auto;
 }
 
 .settings {
@@ -385,8 +390,9 @@ button {
     }
 
     .preset-container {
-        width: calc(50% - 2rem);
-        height: calc(60% - 2rem);
+        width: calc(100% - 2rem);
+        max-width: calc(100% - 2rem);
+        height: calc(33.33% - 2rem);
         margin: .9995rem .9995rem
     }
 }
@@ -400,6 +406,7 @@ button {
 
     .preset-container {
         width: calc(33.33% - 2rem);
+        max-width: calc(33.33% - 2rem);
         margin: 0 .9995rem
     }
 }
@@ -421,6 +428,7 @@ button {
 
     .preset-container {
         width: calc(25% - 2rem);
+        max-width: calc(25% - 2rem);
         margin: 0 .9995rem .9995rem .9995rem;
     }
 }

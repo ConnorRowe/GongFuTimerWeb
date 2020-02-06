@@ -36,7 +36,7 @@ var Timer = /** @class */ (function () {
     return Timer;
 }());
 function CreatePreset(config) {
-    var newPreset = { ID: config.ID, name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
+    var newPreset = { name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
     return newPreset;
 }
 function GeneratePresetContainer(preset) {
@@ -44,8 +44,15 @@ function GeneratePresetContainer(preset) {
     container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
     container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
     container += "<span class='preset-desc'>" + preset.description + "</span>\n";
+    container += "<button type='button' class='preset-select-button'>Apply</button>\n";
     container += "</div>\n";
     return container;
+}
+function ApplyPreset(id) {
+    var targetPreset = PRESETS[id];
+    $("#baseSecs")[0].value = targetPreset.baseSecs.toString();
+    $("#plusSecs")[0].value = targetPreset.plusSecs.toString();
+    $("#infNum")[0].value = "0";
 }
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
@@ -64,10 +71,10 @@ var sndComplete = new Audio("audio/Alarm.wav");
 //Preset stuff
 var PRESETS = new Array();
 //Adding presets manually for testing purposes before the form is implemented
-PRESETS.push(CreatePreset({ ID: 0, name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
-PRESETS.push(CreatePreset({ ID: 1, name: "Imperial Green - Pre Qing Ming", altName: "Long Jing - Dragonwell", description: "Pre Qing Ming harvest of one of China’s most famous teas. Deep, rich and aromatic with roasted borlotti beans, sweet limoncello and strawberry jam aromatics.", temp: 80, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "green" }));
-PRESETS.push(CreatePreset({ ID: 2, name: "Amber Mountain", altName: "Huo Shan Huang Ya", description: "Smooth and elegant tea made in small batches. Morning dew, fresh cut grass, green beans with a light and warming pear sweetness.", temp: 70, amount: 5, baseSecs: 45, plusSecs: 10, infusions: 5, teaType: "yellow" }));
-PRESETS.push(CreatePreset({ ID: 3, name: "Alishan Cream", altName: "Alishan Jin Xuan", description: "A rich and luxurious tea made from the naturally milky Jin Xuan cultivar. Malted milkshake, high mountain grass, alpine rhododendrons and cream.", temp: 95, amount: 6, baseSecs: 20, plusSecs: 5, infusions: 9, teaType: "oolong" }));
+PRESETS.push(CreatePreset({ name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
+PRESETS.push(CreatePreset({ name: "Imperial Green - Pre Qing Ming", altName: "Long Jing - Dragonwell", description: "Pre Qing Ming harvest of one of China’s most famous teas. Deep, rich and aromatic with roasted borlotti beans, sweet limoncello and strawberry jam aromatics.", temp: 80, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "green" }));
+PRESETS.push(CreatePreset({ name: "Amber Mountain", altName: "Huo Shan Huang Ya", description: "Smooth and elegant tea made in small batches. Morning dew, fresh cut grass, green beans with a light and warming pear sweetness.", temp: 70, amount: 5, baseSecs: 45, plusSecs: 10, infusions: 5, teaType: "yellow" }));
+PRESETS.push(CreatePreset({ name: "Alishan Cream", altName: "Alishan Jin Xuan", description: "A rich and luxurious tea made from the naturally milky Jin Xuan cultivar. Malted milkshake, high mountain grass, alpine rhododendrons and cream.", temp: 95, amount: 6, baseSecs: 20, plusSecs: 5, infusions: 9, teaType: "oolong" }));
 function Main() {
     ISMOBILE = detectMob();
     // these listeners will keep track of keyboard presses
@@ -98,9 +105,12 @@ function Main() {
     //resize mobile canvas size
     document.addEventListener("orientationchange", function (evt) { }, false);
     window.addEventListener("resize", function (evt) { }, false);
+    //Bind button click events
     $("#btnStart").click(startTimer);
     $("#btnReset").click(resetTimer);
+    //Set timer display to 00:00:00
     $("#time").html(formatTimerOutput(0));
+    //Bind volume slider input event to set the volume of the alarm sound
     $("#volumeSlider").bind("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
     //get new preset modal
     var modal = $("#newPresetModal");
@@ -119,7 +129,16 @@ function Main() {
     //load Preset data from the document cookies into an array
     var loadedPresets = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
     //create HTML elements for each preset in the array
-    loadedPresets.forEach(function (p) { presetCntnr.prepend(GeneratePresetContainer(p)); });
+    for (var i = 0; i < loadedPresets.length; i++) {
+        //add element to container
+        presetCntnr.append(GeneratePresetContainer(loadedPresets[i]));
+        //get new preset's button element
+        var newPresetBtn = presetCntnr.children().eq(i).children(".preset-select-button");
+        //add the presetid attribute which holds the preset's index in the PRESETS array
+        newPresetBtn.attr("presetid", i);
+        //add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
+        newPresetBtn.click(function (e) { ApplyPreset(parseInt(e.target.getAttribute("presetid"))); });
+    }
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
 }
