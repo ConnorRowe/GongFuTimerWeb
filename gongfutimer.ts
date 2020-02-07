@@ -75,9 +75,9 @@ function GeneratePresetContainer(preset: Preset) {
 function ApplyPreset(id: number) {
 	const targetPreset: Preset = PRESETS[id];
 
-	(<HTMLInputElement>$("#baseSecs")[0]).value = targetPreset.baseSecs.toString();
-	(<HTMLInputElement>$("#plusSecs")[0]).value = targetPreset.plusSecs.toString();
-	(<HTMLInputElement>$("#infNum")[0]).value = "0";
+	baseSecsInput.val(targetPreset.baseSecs);
+	plusSecsInput.val(targetPreset.plusSecs);
+	infNumInput.val(0);
 }
 
 /// GLOBALS
@@ -96,6 +96,12 @@ var TEATIMER: Timer = new Timer();					//Timer object handling the actual tea ti
 
 //Sound
 const sndComplete: HTMLAudioElement = new Audio("audio/Alarm.wav");
+
+//Frequently modified elements
+const baseSecsInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#baseSecs");
+const plusSecsInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#plusSecs");
+const infNumInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#infNum");
+const timerText: JQuery<HTMLHeadingElement> = <JQuery<HTMLHeadingElement>>$("#time");
 
 //Preset stuff
 var PRESETS: Preset[] = new Array<Preset>();
@@ -149,7 +155,7 @@ function Main() {
 	$("#btnReset").click(resetTimer);
 
 	//Set timer display to 00:00:00
-	$("#time").html(formatTimerOutput(0));
+	timerText.html(formatTimerOutput(0));
 
 	//Bind volume slider input event to set the volume of the alarm sound
 	$("#volumeSlider").bind("input", (v) => { sndComplete.volume = parseFloat((<HTMLInputElement>v.target).value); })
@@ -209,7 +215,7 @@ function Update() {
 	if (TARGETSECS - TEATIMER.elapsedSeconds() <= 0 && TEATIMER.isRunning) {
 		//Timer complete
 		TEATIMER.stop();
-		$("#time").html(formatTimerOutput(0));
+		timerText.html(formatTimerOutput(0));
 		sndComplete.play();
 	}
 }
@@ -217,26 +223,26 @@ function Update() {
 function Draw() {
 	if (TEATIMER.isRunning) {
 		//update timer display
-		$("#time").html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
+		timerText.html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
 	}
 }
 
 function startTimer() {
-	const baseSecs: number = parseInt((<HTMLInputElement>$("#baseSecs")[0]).value);
-	const plusSecs: number = parseInt((<HTMLInputElement>$("#plusSecs")[0]).value);
-	let infNum: number = parseInt((<HTMLInputElement>$("#infNum")[0]).value);
+	const baseSecs: number = parseInt(<string>baseSecsInput.val());
+	const plusSecs: number = parseInt(<string>plusSecsInput.val());
+	let infNum: number = parseInt(<string>infNumInput.val());
 
 	TARGETSECS = baseSecs + (plusSecs * infNum);
 	TEATIMER.start();
 
 	infNum++;
-	(<HTMLInputElement>$("#infNum")[0]).value = infNum.toString();
+	infNumInput.val(infNum);
 }
 
 function resetTimer() {
 	TEATIMER.stop();
-	$("#time").html(formatTimerOutput(0));
-	(<HTMLInputElement>$("#infNum")[0]).value = "0";
+	timerText.html(formatTimerOutput(0));
+	infNumInput.val(0);
 }
 
 function detectMob() {

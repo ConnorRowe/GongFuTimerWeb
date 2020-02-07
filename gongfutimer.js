@@ -50,9 +50,9 @@ function GeneratePresetContainer(preset) {
 }
 function ApplyPreset(id) {
     var targetPreset = PRESETS[id];
-    $("#baseSecs")[0].value = targetPreset.baseSecs.toString();
-    $("#plusSecs")[0].value = targetPreset.plusSecs.toString();
-    $("#infNum")[0].value = "0";
+    baseSecsInput.val(targetPreset.baseSecs);
+    plusSecsInput.val(targetPreset.plusSecs);
+    infNumInput.val(0);
 }
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
@@ -68,6 +68,11 @@ var TARGETSECS = 0; //time calculated for the brew
 var TEATIMER = new Timer(); //Timer object handling the actual tea timer
 //Sound
 var sndComplete = new Audio("audio/Alarm.wav");
+//Frequently modified elements
+var baseSecsInput = $("#baseSecs");
+var plusSecsInput = $("#plusSecs");
+var infNumInput = $("#infNum");
+var timerText = $("#time");
 //Preset stuff
 var PRESETS = new Array();
 //Adding presets manually for testing purposes before the form is implemented
@@ -109,7 +114,7 @@ function Main() {
     $("#btnStart").click(startTimer);
     $("#btnReset").click(resetTimer);
     //Set timer display to 00:00:00
-    $("#time").html(formatTimerOutput(0));
+    timerText.html(formatTimerOutput(0));
     //Bind volume slider input event to set the volume of the alarm sound
     $("#volumeSlider").bind("input", function (v) { sndComplete.volume = parseFloat(v.target.value); });
     //get new preset modal
@@ -157,29 +162,29 @@ function Update() {
     if (TARGETSECS - TEATIMER.elapsedSeconds() <= 0 && TEATIMER.isRunning) {
         //Timer complete
         TEATIMER.stop();
-        $("#time").html(formatTimerOutput(0));
+        timerText.html(formatTimerOutput(0));
         sndComplete.play();
     }
 }
 function Draw() {
     if (TEATIMER.isRunning) {
         //update timer display
-        $("#time").html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
+        timerText.html(formatTimerOutput(TARGETSECS - TEATIMER.elapsedSeconds()));
     }
 }
 function startTimer() {
-    var baseSecs = parseInt($("#baseSecs")[0].value);
-    var plusSecs = parseInt($("#plusSecs")[0].value);
-    var infNum = parseInt($("#infNum")[0].value);
+    var baseSecs = parseInt(baseSecsInput.val());
+    var plusSecs = parseInt(plusSecsInput.val());
+    var infNum = parseInt(infNumInput.val());
     TARGETSECS = baseSecs + (plusSecs * infNum);
     TEATIMER.start();
     infNum++;
-    $("#infNum")[0].value = infNum.toString();
+    infNumInput.val(infNum);
 }
 function resetTimer() {
     TEATIMER.stop();
-    $("#time").html(formatTimerOutput(0));
-    $("#infNum")[0].value = "0";
+    timerText.html(formatTimerOutput(0));
+    infNumInput.val(0);
 }
 function detectMob() {
     if (navigator.userAgent.match(/Android/i) ||
