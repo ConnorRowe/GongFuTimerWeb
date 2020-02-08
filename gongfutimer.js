@@ -39,8 +39,9 @@ function CreatePreset(config) {
     var newPreset = { name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
     return newPreset;
 }
-function GeneratePresetContainer(preset) {
+function GeneratePresetContainerHTML(preset) {
     var container = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
+    container += "<span class='preset-delete'>&times;</span>\n";
     container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
     container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
     container += "<span class='preset-desc'>" + preset.description + "</span>\n";
@@ -48,11 +49,72 @@ function GeneratePresetContainer(preset) {
     container += "</div>\n";
     return container;
 }
+function AddPresetToDOM(preset) {
+    //get preset container div
+    var presetCntnr = $("#presetsContainer");
+    //add element to container
+    presetCntnr.append(GeneratePresetContainerHTML(preset));
+    var finalIndex = presetCntnr.children().length - 1;
+    //get new preset's button element
+    var newPresetBtn = presetCntnr.children().eq(finalIndex).children(".preset-select-button");
+    //add the presetid attribute which holds the preset's index in the PRESETS array
+    newPresetBtn.attr("presetid", finalIndex);
+    //add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
+    newPresetBtn.click(function (e) { ApplyPreset(parseInt(e.target.getAttribute("presetid"))); });
+    //find delete span
+    var newPresetDelete = presetCntnr.children().eq(finalIndex).children(".preset-delete");
+    newPresetDelete.attr("presetid", finalIndex);
+    //add click event
+    newPresetDelete.click(function (e) { RemovePreset(e.target.parentElement, parseInt(e.target.getAttribute("presetid"))); });
+}
+function RemovePreset(target, id) {
+    //Find the right preset and remove it
+    $("#presetsContainer").find(target).remove();
+    //Remove preset data from the array
+    PRESETS.splice(id);
+    //Overwrite cookies with new array data
+    SavePresets();
+}
 function ApplyPreset(id) {
     var targetPreset = PRESETS[id];
     baseSecsInput.val(targetPreset.baseSecs);
     plusSecsInput.val(targetPreset.plusSecs);
     infNumInput.val(0);
+}
+function NewPresetFromModal() {
+    var newPreset = CreatePreset({ name: "", altName: "", description: "", temp: 0, amount: 0, baseSecs: 0, plusSecs: 0, infusions: 0, teaType: "" });
+    //Read preset data from form inputs
+    newPreset.name = $("#presetName").val();
+    newPreset.altName = $("#presetAltName").val();
+    newPreset.description = $("#presetDesc").val();
+    newPreset.teaType = $("#presetTeaType").val();
+    newPreset.temp = parseInt($("#presetTemp").val());
+    newPreset.baseSecs = parseInt($("#presetBaseSecs").val());
+    newPreset.plusSecs = parseInt($("#presetPlusSecs").val());
+    newPreset.infusions = parseInt($("#presetInfusions").val());
+    //Add to array
+    PRESETS.push(newPreset);
+    //Save to cookies
+    SavePresets();
+    //Add new element
+    AddPresetToDOM(newPreset);
+    //Hide modal
+    $("#newPresetModal").css("display", "none");
+}
+function SavePresets() {
+    //convert the PRESETS array into JSON in cookie format and save to document cookies
+    var presetsJSON = "presets=" + JSON.stringify(PRESETS) + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+    document.cookie = presetsJSON;
+}
+function LoadPresets() {
+    //Empty the preset container
+    $("#presetsContainer").empty();
+    //load Preset data from the document cookies into array
+    PRESETS = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+    //create HTML elements for each preset in the array
+    for (var i = 0; i < PRESETS.length; i++) {
+        AddPresetToDOM(PRESETS[i]);
+    }
 }
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
@@ -125,25 +187,11 @@ function Main() {
     var span = $(".close");
     //open modal on click
     btnNewPreset.click(function () { modal.css("display", "block"); });
+    //close it
     span.click(function () { modal.css("display", "none"); });
-    //get preset container div
-    var presetCntnr = $("#presetsContainer");
-    //convert the PRESETS array into JSON in cookie format and save to document cookies
-    var presetsJSON = "presets=" + JSON.stringify(PRESETS) + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-    document.cookie = presetsJSON;
-    //load Preset data from the document cookies into an array
-    var loadedPresets = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-    //create HTML elements for each preset in the array
-    for (var i = 0; i < loadedPresets.length; i++) {
-        //add element to container
-        presetCntnr.append(GeneratePresetContainer(loadedPresets[i]));
-        //get new preset's button element
-        var newPresetBtn = presetCntnr.children().eq(i).children(".preset-select-button");
-        //add the presetid attribute which holds the preset's index in the PRESETS array
-        newPresetBtn.attr("presetid", i);
-        //add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
-        newPresetBtn.click(function (e) { ApplyPreset(parseInt(e.target.getAttribute("presetid"))); });
-    }
+    //create new preset on cick
+    $("#btnCreatePreset").click(NewPresetFromModal);
+    LoadPresets();
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
 }

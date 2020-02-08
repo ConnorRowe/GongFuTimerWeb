@@ -1,12 +1,4 @@
 ﻿<html lang="en">
-<script type="text/javascript">
-    window["_gaUserPrefs"] = {
-        ioo: function () {
-            return true;
-        }
-    }
-</script>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
@@ -38,7 +30,57 @@
         <div id="newPresetModal" class="new-preset-modal">
             <div class="preset-modal-content">
                 <span class="close">&times;</span>
-                <p>Lorem ipsum...</p>
+                <form class="new-preset__form">
+                    <ul>
+                        <li>
+                            <label for="presetName">Tea Name</label>
+                            <input type="text" id="presetName" />
+                        </li>
+                        <li>
+                            <label for="presetAltName">Alternative Name (Subtitle)</label>
+                            <input type="text" id="presetAltName" />
+                        </li>
+                        <li>
+                            <label for="presetDesc">Description</label>
+                            <textarea cols="30" rows="8" id="presetDesc"></textarea>
+                        </li>
+                        <li>
+                            <label for="presetTeaType">Tea Type</label>
+                            <select id="presetTeaType">
+                                <option value="black">Black</option>
+                                <option value="green">Green</option>
+                                <option value="matcha">Matcha</option>
+                                <option value="oolong">Oolong</option>
+                                <option value="raw-puehr">Raw Puehr</option>
+                                <option value="ripe-puehr">Ripe Puehr</option>
+                                <option value="white">White</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="blend">Blend</option>
+                                <option value="tisane">Tisane</option>
+                                <option value="medicinal">Medicinal Herbs</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label for="presetTemp">Temperature</label>
+                            <input type="number" id="presetTemp" />
+                        </li>
+                        <li>
+                            <label for="presetBaseSecs">1st Infusion Secs</label>
+                            <input type="number" id="presetBaseSecs" />
+                        </li>
+                        <li>
+                            <label for="presetPlusSecs">+ Infusion Secs</label>
+                            <input type="number" id="presetPlusSecs" />
+                        </li>
+                        <li>
+                            <label for="presetInfusions">Number of Infusions</label>
+                            <input type="number" id="presetInfusions" />
+                        </li>
+                        <li class="button__li">
+                            <button type="button" id="btnCreatePreset">Create Preset</button>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </div>
         <div class='section menu'>
@@ -99,10 +141,7 @@
         </div>
     </div>
 
-    <div class="centred">
-        <script type="text/javascript" src="gongfutimer.js"></script>
-    </div>
-
+    <script type="text/javascript" src="gongfutimer.js"></script>
 </body>
 
 </html>
