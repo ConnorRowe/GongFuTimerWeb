@@ -135,16 +135,15 @@
 
 .preset-selection-container {
     font-size: 1.7ch;
-    padding: 2rem 0;
     margin: 2rem 0;
     display: -ms-flexbox;
     display: flex;
+    flex: 1 1 auto;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     -ms-flex-pack: justify;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-direction: row;
-    flex: 1 1 auto;
     width: 100%;
 }
 
@@ -452,10 +451,15 @@ li > button {
         width: 15vw;
     }
 
+    .preset-selection-container {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
     .preset-container {
         width: calc(100% - 2rem);
         max-width: calc(100% - 2rem);
-        height: calc(33.33% - 2rem);
+        height: 16rem;
         margin: .9995rem .9995rem
     }
 }
