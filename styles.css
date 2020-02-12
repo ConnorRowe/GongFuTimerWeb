@@ -170,9 +170,6 @@
     margin: 0 .9995rem;
 }
 
-    .preset-container:hover .preset-controls {
-        color: #aaa;
-    }
 
 .preset-container-black {
     border-top-color: #000201;
@@ -484,6 +481,10 @@ li > button {
         height: 16rem;
         margin: .9995rem .9995rem
     }
+
+    .preset-controls {
+        color: #aaa;
+    }
 }
 
 /* Tablet Styles */
@@ -497,6 +498,10 @@ li > button {
         width: calc(33.33% - 2rem);
         max-width: calc(33.33% - 2rem);
         margin: 0 .9995rem
+    }
+
+    .preset-controls {
+        color: #aaa;
     }
 }
 
@@ -520,4 +525,8 @@ li > button {
         max-width: calc(25% - 2rem);
         margin: 0 .9995rem .9995rem .9995rem;
     }
+
+        .preset-container:hover .preset-controls {
+            color: #aaa;
+        }
 }
