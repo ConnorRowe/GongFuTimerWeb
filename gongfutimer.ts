@@ -63,7 +63,10 @@ function CreatePreset(config: Preset): { name: string; altName: string; descript
 
 function GeneratePresetContainerHTML(preset: Preset) {
 	let container: string = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
-	container += "<span class='preset-delete'>&times;</span>\n";
+	container += "<div class='preset-controls'>\n";
+	container += "<span class='preset-delete' title='Delete'>&times;</span>\n";
+	container += "<span class='preset-edit' title='Edit'>&hellip;</span>\n";
+	container += "</div>\n";
 	container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
 	container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
 	container += "<span class='preset-desc'>" + preset.description + "</span>\n";
@@ -79,24 +82,49 @@ function AddPresetToDOM(preset: Preset) {
 	//add element to container
 	presetCntnr.append(GeneratePresetContainerHTML(preset));
 	const finalIndex: number = presetCntnr.children().length - 1;
+	//get new preset card
+	const newPresetCard: JQuery<HTMLElement> = presetCntnr.children().eq(finalIndex);
 	//get new preset's button element
-	const newPresetBtn = presetCntnr.children().eq(finalIndex).children(".preset-select-button");
+	const newPresetBtn = newPresetCard.children(".preset-select-button");
 	//add the presetid attribute which holds the preset's index in the PRESETS array
 	newPresetBtn.attr("presetid", finalIndex);
 	//add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
 	newPresetBtn.click((e) => { ApplyPreset(parseInt(e.target.getAttribute("presetid"))); })
+	//find preset controls div
+	const newPresetControls = newPresetCard.children(".preset-controls");
 	//find delete span
-	const newPresetDelete = presetCntnr.children().eq(finalIndex).children(".preset-delete");
+	const newPresetDelete = newPresetControls.children(".preset-delete");
 	newPresetDelete.attr("presetid", finalIndex);
 	//add click event
-	newPresetDelete.click((e) => { RemovePreset(e.target.parentElement, parseInt(e.target.getAttribute("presetid"))); });
+	newPresetDelete.click((e) => { RemovePreset(e.target.parentElement.parentElement, parseInt(e.target.getAttribute("presetid"))); });
+	//find edit span
+	const newPresetEdit = newPresetControls.children(".preset-edit");
+	newPresetEdit.attr("presetid", finalIndex);
+	//add click event
+	newPresetEdit.click((e) => {
+		CURRENTPRESETID = parseInt(e.target.getAttribute("presetid"));
+		//open modal
+		$("#newPresetModal").css("display", "block");
+		//populate modal with the current preset's data
+		const currentPreset = PRESETS[CURRENTPRESETID];
+		$("#presetName").val(currentPreset.name);
+		$("#presetAltName").val(currentPreset.altName);
+		$("#presetDesc").val(currentPreset.description);
+		$("#presetTeaType").val(currentPreset.teaType);
+		$("#presetTemp").val(currentPreset.temp);
+		$("#presetBaseSecs").val(currentPreset.baseSecs);
+		$("#presetPlusSecs").val(currentPreset.plusSecs);
+		$("#presetInfusions").val(currentPreset.infusions);
+	});
+
+	return newPresetCard;
 }
 
 function RemovePreset(target: HTMLElement, id: number) {
 	//Find the right preset and remove it
 	$("#presetsContainer").find(target).remove();
 	//Remove preset data from the array
-	PRESETS.splice(id);
+	PRESETS.splice(id, 1);
 	//Overwrite cookies with new array data
 	SavePresets();
 }
@@ -122,13 +150,26 @@ function NewPresetFromModal() {
 	newPreset.plusSecs = parseInt(<string>$("#presetPlusSecs").val());
 	newPreset.infusions = parseInt(<string>$("#presetInfusions").val());
 
-	//Add to array
-	PRESETS.push(newPreset);
+	//Add new element
+	const newElement: JQuery<HTMLElement> = AddPresetToDOM(newPreset);
+
+	if (CURRENTPRESETID < 0) {
+		//Add new preset to array
+		PRESETS.push(newPreset);
+	}
+	else {
+		//get the preset to be edited
+		PRESETS[CURRENTPRESETID] = newPreset;
+
+		//replace the old element with a new version with updated data
+		$("#presetsContainer").children().eq(CURRENTPRESETID).replaceWith(newElement);
+
+		//reset CURRENTPRESETID
+		CURRENTPRESETID = -1;
+	}
+
 	//Save to cookies
 	SavePresets();
-
-	//Add new element
-	AddPresetToDOM(newPreset);
 
 	//Hide modal
 	$("#newPresetModal").css("display", "none");
@@ -145,11 +186,18 @@ function LoadPresets() {
 	$("#presetsContainer").empty();
 
 	//load Preset data from the document cookies into array
-	PRESETS = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+	const presetsCookie = document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
+	//if the cookie doesnt exist do not continue
+	if (presetsCookie == "") { return; };
+
+	PRESETS = JSON.parse(presetsCookie);
 
 	//create HTML elements for each preset in the array
 	for (var i = 0; i < PRESETS.length; i++) {
-		AddPresetToDOM(PRESETS[i]);
+		if (PRESETS[i] != null) {
+			AddPresetToDOM(PRESETS[i]);
+		}
 	}
 }
 
@@ -178,11 +226,7 @@ const timerText: JQuery<HTMLHeadingElement> = <JQuery<HTMLHeadingElement>>$("#ti
 
 //Preset stuff
 var PRESETS: Preset[] = new Array<Preset>();
-//Adding presets manually for testing purposes before the form is implemented
-PRESETS.push(CreatePreset({ name: "Souchong Liquour", altName: "Tong Mu Zhengshan Xiaozhong", description: "An unsmoked Lapsang that shows the true depth of flavour of this famous tea. Dark cocoa, charred bourbon casks and rambutan.", temp: 90, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "black" }));
-PRESETS.push(CreatePreset({ name: "Imperial Green - Pre Qing Ming", altName: "Long Jing - Dragonwell", description: "Pre Qing Ming harvest of one of China’s most famous teas. Deep, rich and aromatic with roasted borlotti beans, sweet limoncello and strawberry jam aromatics.", temp: 80, amount: 5, baseSecs: 15, plusSecs: 5, infusions: 5, teaType: "green" }));
-PRESETS.push(CreatePreset({ name: "Amber Mountain", altName: "Huo Shan Huang Ya", description: "Smooth and elegant tea made in small batches. Morning dew, fresh cut grass, green beans with a light and warming pear sweetness.", temp: 70, amount: 5, baseSecs: 45, plusSecs: 10, infusions: 5, teaType: "yellow" }));
-PRESETS.push(CreatePreset({ name: "Alishan Cream", altName: "Alishan Jin Xuan", description: "A rich and luxurious tea made from the naturally milky Jin Xuan cultivar. Malted milkshake, high mountain grass, alpine rhododendrons and cream.", temp: 95, amount: 6, baseSecs: 20, plusSecs: 5, infusions: 9, teaType: "oolong" }));
+var CURRENTPRESETID: number = -1;
 
 function Main() {
 	ISMOBILE = detectMob();
@@ -241,9 +285,24 @@ function Main() {
 	const span = $(".close");
 
 	//open modal on click
-	btnNewPreset.click(() => { modal.css("display", "block"); });
+	btnNewPreset.click(() => {
+		modal.css("display", "block");
+		//clear modal inputs
+		$("#presetName").val("");
+		$("#presetAltName").val("");
+		$("#presetDesc").val("");
+		$("#presetTeaType").val("");
+		$("#presetTemp").val("");
+		$("#presetBaseSecs").val("");
+		$("#presetPlusSecs").val("");
+		$("#presetInfusions").val("");
+	});
 	//close it
-	span.click(() => { modal.css("display", "none"); });
+	span.click(() => {
+		modal.css("display", "none");
+		//reset CURRENTPRESETID so if the model is opened via the new preset button, it adds a new one instead of overwriting a previously edited one
+		CURRENTPRESETID = -1;
+	});
 
 	//create new preset on cick
 	$("#btnCreatePreset").click(NewPresetFromModal);

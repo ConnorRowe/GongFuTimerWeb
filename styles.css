@@ -237,15 +237,26 @@
     width: auto;
 }
 
-.preset-delete {
-    color: #aaa;
+.preset-controls {
     float: right;
     font-size: 1.5rem;
     font-weight: bold;
     align-self: end;
     margin-right: -0.5rem;
     margin-top: -1rem;
-    flex-shrink: 8;
+    color: #aaa;
+    display: flex;
+    flex: 0 2 auto;
+    flex-direction: row;
+}
+
+.preset-edit {
+    order: 1;
+}
+
+.preset-delete {
+    order: 2;
+    margin-left: 0.5rem;
 }
 
     .preset-delete:hover, .preset-delete:focus {
@@ -253,6 +264,12 @@
         text-decoration: none;
         cursor: pointer;
     }
+
+.preset-edit:hover, .preset-edit:focus {
+    color: darkcyan;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .settings {
     background-color: #4b4453;
@@ -361,10 +378,11 @@ button {
 
 .preset-modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
     padding: 20px;
+    margin: 4% auto auto auto;
     border: 1px solid #888;
     width: 80%;
+    height: auto;
 }
 
 .preset__form {
