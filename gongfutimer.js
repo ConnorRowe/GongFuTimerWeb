@@ -48,7 +48,7 @@ function GeneratePresetContainerHTML(preset) {
     container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
     container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
     container += "<span class='preset-desc'>" + preset.description + "</span>\n";
-    container += "<button class='slide-up-btn dark-btn preset-select-button' type='button'><div class='slide-up-bg dark-btn'></div><span class='slide-up-txt dark-btn'>Apply</span></button>\n";
+    container += "<button class='fill-up-btn dark-btn preset-select-button' type='button'><div class='fill-up-bg dark-btn'></div><div class='fill-up-stream dark-btn'></div><span class='fill-up-txt dark-btn'>Apply</span></button>\n";
     container += "</div>\n";
     return container;
 }
