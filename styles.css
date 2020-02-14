@@ -487,22 +487,29 @@ button.dark-btn {
     from {
         opacity: 0;
         bottom: 100%;
+        width: 0%;
+        left: 78%;
     }
 
     3% {
         opacity: 1;
         bottom: 0%;
+        width: 5%;
+        left: 80%;
     }
 
     95% {
         opacity: 1;
         bottom: 0%;
         top: 100%;
+        width: .5%;
     }
 
     to {
         opacity: 0;
         top: 0%;
+        width: 0%;
+        left: 78%;
     }
 }
 
