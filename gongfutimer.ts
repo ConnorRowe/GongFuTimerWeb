@@ -76,20 +76,24 @@ function GeneratePresetContainerHTML(preset: Preset) {
 	return container;
 }
 
-function AddPresetToDOM(preset: Preset) {
+function AddPresetToDOM(preset: Preset, idOverride?: number) {
 	//get preset container div
 	const presetCntnr = $("#presetsContainer");
 	//add element to container
 	presetCntnr.append(GeneratePresetContainerHTML(preset));
-	const finalIndex: number = presetCntnr.children().length - 1;
+	let finalIndex: number = presetCntnr.children().length - 1;
 	//get new preset card
 	const newPresetCard: JQuery<HTMLElement> = presetCntnr.children().eq(finalIndex);
 	//get new preset's button element
 	const newPresetBtn = newPresetCard.children(".preset-select-button");
+	//override index for the preset id attributes
+	if (idOverride != undefined) {
+		finalIndex = idOverride;
+	}
 	//add the presetid attribute which holds the preset's index in the PRESETS array
 	newPresetBtn.attr("presetid", finalIndex);
 	//add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
-	newPresetBtn.click((e) => { ApplyPreset(parseInt(e.target.getAttribute("presetid"))); })
+	newPresetBtn.click((e) => { ApplyPreset(parseInt(e.currentTarget.getAttribute("presetid"))); })
 	//find preset controls div
 	const newPresetControls = newPresetCard.children(".preset-controls");
 	//find delete span
@@ -102,7 +106,7 @@ function AddPresetToDOM(preset: Preset) {
 	newPresetEdit.attr("presetid", finalIndex);
 	//add click event
 	newPresetEdit.click((e) => {
-		CURRENTPRESETID = parseInt(e.target.getAttribute("presetid"));
+		CURRENTPRESETID = parseInt(e.currentTarget.getAttribute("presetid"));
 		//open modal
 		$("#newPresetModal").css("display", "block");
 		//populate modal with the current preset's data
@@ -151,15 +155,19 @@ function NewPresetFromModal() {
 	newPreset.infusions = parseInt(<string>$("#presetInfusions").val());
 
 	//Add new element
-	const newElement: JQuery<HTMLElement> = AddPresetToDOM(newPreset);
+	let newElement: JQuery<HTMLElement>;
 
 	if (CURRENTPRESETID < 0) {
 		//Add new preset to array
 		PRESETS.push(newPreset);
+		newElement= AddPresetToDOM(newPreset);
 	}
 	else {
 		//get the preset to be edited
 		PRESETS[CURRENTPRESETID] = newPreset;
+
+		//Override the card's ID attributes
+		newElement = AddPresetToDOM(newPreset, CURRENTPRESETID);
 
 		//replace the old element with a new version with updated data
 		$("#presetsContainer").children().eq(CURRENTPRESETID).replaceWith(newElement);
