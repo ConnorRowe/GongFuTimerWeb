@@ -235,7 +235,7 @@ function ImportFromURL() {
 	urlImportError.html("");
 
 	//load webpage from URL
-	$.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent(newURL) + '&callback=?', (data) => {
+	$.getJSON('https://www.whateverorigin.org/get?url=' + encodeURIComponent(newURL) + '&callback=?', (data) => {
 		//write loaded data to the new document so it can be manipulated via jQuery
 		newDoc.write(data.contents);
 
