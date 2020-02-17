@@ -260,7 +260,9 @@ function ImportFromURL() {
 		$("#presetBaseSecs").val(parseInt(brewGuideChildren.eq(2).html()));
 		$("#presetPlusSecs").val(parseInt(brewGuideChildren.eq(3).html()));
 		$("#presetInfusions").val(parseInt(brewGuideChildren.eq(4).html()));
-	});
+	})
+		//Display error message if it fails
+		.fail((jqXHR, status, error) => { urlImportError.html(status.toString()); });
 }
 
 /// GLOBALS

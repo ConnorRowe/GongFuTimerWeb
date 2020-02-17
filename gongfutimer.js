@@ -213,7 +213,9 @@ function ImportFromURL() {
         $("#presetBaseSecs").val(parseInt(brewGuideChildren.eq(2).html()));
         $("#presetPlusSecs").val(parseInt(brewGuideChildren.eq(3).html()));
         $("#presetInfusions").val(parseInt(brewGuideChildren.eq(4).html()));
-    });
+    })
+        //Display error message if it fails
+        .fail(function (jqXHR, status, error) { urlImportError.html(status.toString()); });
 }
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
