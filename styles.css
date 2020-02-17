@@ -187,11 +187,11 @@
     border-top-color: #3b4272;
 }
 
-.preset-container-raw-puehr {
+.preset-container-raw-puerh {
     border-top-color: #008487;
 }
 
-.preset-container-ripe-puehr {
+.preset-container-ripe-puerh {
     border-top-color: #5a2213;
 }
 
@@ -527,6 +527,15 @@ button.dark-btn {
     }
 }
 
+.error__label {
+    color: darkred;
+}
+
+.url-import {
+    text-align: left;
+    width: 33.33%;
+    margin-bottom: -8%;
+}
 
 .brew-guide__img {
     height: 56px;
