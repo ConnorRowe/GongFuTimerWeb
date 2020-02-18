@@ -262,7 +262,7 @@ function ImportFromURL() {
 		$("#presetInfusions").val(parseInt(brewGuideChildren.eq(4).html()));
 	})
 		//Display error message if it fails
-		.fail((jqXHR, status, error) => { urlImportError.html(status.toString()); });
+		.fail((jqXHR, status, error) => { urlImportError.html('Error: ' + jqXHR.status + ': ' + jqXHR.statusText); });
 }
 
 /// GLOBALS

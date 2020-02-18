@@ -191,7 +191,7 @@ function ImportFromURL() {
     //clear any previous error
     urlImportError.html("");
     //load webpage from URL
-    $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent(newURL) + '&callback=?', function (data) {
+    $.getJSON('https://www.whateverorigin.org/get?url=' + encodeURIComponent(newURL) + '&callback=?', function (data) {
         //write loaded data to the new document so it can be manipulated via jQuery
         newDoc.write(data.contents);
         //create new jQuery object for the new doc
@@ -215,7 +215,7 @@ function ImportFromURL() {
         $("#presetInfusions").val(parseInt(brewGuideChildren.eq(4).html()));
     })
         //Display error message if it fails
-        .fail(function (jqXHR, status, error) { urlImportError.html(status.toString()); });
+        .fail(function (jqXHR, status, error) { urlImportError.html('Error: ' + jqXHR.status + ': ' + jqXHR.statusText); });
 }
 /// GLOBALS
 var KEYSTATE = new Array(); //check the defined keypress
