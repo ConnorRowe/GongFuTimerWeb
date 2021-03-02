@@ -55,6 +55,12 @@ interface Preset {
 	teaType: string;
 }
 
+interface TimerVals {
+	baseSecs: number;
+	plusSecs: number;
+	infusions: number;
+}
+
 function CreatePreset(config: Preset): { name: string; altName: string; description: string; temp: number; amount: number; baseSecs: number; plusSecs: number; infusions: number; teaType: string } {
 	const newPreset: Preset = { name: config.name, altName: config.altName, description: config.description, temp: config.temp, amount: config.amount, baseSecs: config.baseSecs, plusSecs: config.plusSecs, infusions: config.infusions, teaType: config.teaType };
 
@@ -139,6 +145,8 @@ function ApplyPreset(id: number) {
 	baseSecsInput.val(targetPreset.baseSecs);
 	plusSecsInput.val(targetPreset.plusSecs);
 	infNumInput.val(0);
+
+	SaveLastTimer();
 }
 
 function NewPresetFromModal() {
@@ -185,8 +193,7 @@ function NewPresetFromModal() {
 
 function SavePresets() {
 	//convert the PRESETS array into JSON in cookie format and save to document cookies
-	const presetsJSON = "presets=" + JSON.stringify(PRESETS) + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-	document.cookie = presetsJSON;
+	SetCookie("presets", JSON.stringify(PRESETS));
 }
 
 function LoadPresets() {
@@ -194,10 +201,10 @@ function LoadPresets() {
 	$("#presetsContainer").empty();
 
 	//load Preset data from the document cookies into array
-	const presetsCookie = document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	const presetsCookie = GetCookie("presets");
 
 	//if the cookie doesnt exist do not continue
-	if (presetsCookie == "") { return; };
+	if (presetsCookie == "" || presetsCookie == undefined) { return; };
 
 	PRESETS = JSON.parse(presetsCookie);
 
@@ -207,6 +214,58 @@ function LoadPresets() {
 			AddPresetToDOM(PRESETS[i]);
 		}
 	}
+}
+
+function SaveLastTimer() {
+	//Saves the last used timer values to doc cookies
+	const lastTimer: TimerVals = { baseSecs: parseInt(<string>baseSecsInput.val()), plusSecs: parseInt(<string>plusSecsInput.val()), infusions: parseInt(<string>infNumInput.val()) };
+
+	SetCookie("lastTimer", JSON.stringify(lastTimer));
+}
+
+function LoadLastTimer() {
+	//Loads last timer cookie and applies its values to the timer
+	const timerCookie = GetCookie("lastTimer");
+	if (timerCookie == "" || timerCookie == undefined) { return; };
+
+	const lastTimer: TimerVals = JSON.parse(timerCookie);
+	baseSecsInput.val(lastTimer.baseSecs);
+	plusSecsInput.val(lastTimer.plusSecs);
+	infNumInput.val(lastTimer.infusions);
+}
+
+function SetCookie(name: string, value: string) {
+	var options = {
+		path: '/',
+		SameSite: "Strict",
+		expires: "Fri, 31 Dec 9999 23:59:59 GMT",
+		// add other defaults here if necessary
+		...options
+	};
+
+	if (options.expires instanceof Date) {
+		options.expires = options.expires.toUTCString();
+	}
+
+	let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+	for (let optionKey in options) {
+		updatedCookie += "; " + optionKey;
+		let optionValue = options[optionKey];
+		if (optionValue !== true) {
+			updatedCookie += "=" + optionValue;
+		}
+	}
+
+	document.cookie = updatedCookie;
+}
+
+function GetCookie(name: string): string {
+	let matches = document.cookie.match(new RegExp(
+		"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	));
+
+	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 //converts tea type names from the website's format into the local format
@@ -380,6 +439,8 @@ function Main() {
 
 	LoadPresets();
 
+	LoadLastTimer();
+
 	//and here we begin the frame loop
 	window.requestAnimationFrame(Loop);
 }
@@ -424,12 +485,16 @@ function startTimer() {
 
 	infNum++;
 	infNumInput.val(infNum);
+
+	SaveLastTimer();
 }
 
 function resetTimer() {
 	TEATIMER.stop();
 	timerText.html(formatTimerOutput(0));
 	infNumInput.val(0);
+
+	SaveLastTimer();
 }
 
 function detectMob() {

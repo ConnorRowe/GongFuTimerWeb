@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var Timer = /** @class */ (function () {
     function Timer() {
         this.startTime = 0;
@@ -111,6 +122,7 @@ function ApplyPreset(id) {
     baseSecsInput.val(targetPreset.baseSecs);
     plusSecsInput.val(targetPreset.plusSecs);
     infNumInput.val(0);
+    SaveLastTimer();
 }
 function NewPresetFromModal() {
     var newPreset = CreatePreset({ name: "", altName: "", description: "", temp: 0, amount: 0, baseSecs: 0, plusSecs: 0, infusions: 0, teaType: "" });
@@ -147,16 +159,15 @@ function NewPresetFromModal() {
 }
 function SavePresets() {
     //convert the PRESETS array into JSON in cookie format and save to document cookies
-    var presetsJSON = "presets=" + JSON.stringify(PRESETS) + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-    document.cookie = presetsJSON;
+    SetCookie("presets", JSON.stringify(PRESETS));
 }
 function LoadPresets() {
     //Empty the preset container
     $("#presetsContainer").empty();
     //load Preset data from the document cookies into array
-    var presetsCookie = document.cookie.replace(/(?:(?:^|.*;\s*)presets\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var presetsCookie = GetCookie("presets");
     //if the cookie doesnt exist do not continue
-    if (presetsCookie == "") {
+    if (presetsCookie == "" || presetsCookie == undefined) {
         return;
     }
     ;
@@ -167,6 +178,42 @@ function LoadPresets() {
             AddPresetToDOM(PRESETS[i]);
         }
     }
+}
+function SaveLastTimer() {
+    //Saves the last used timer values to doc cookies
+    var lastTimer = { baseSecs: parseInt(baseSecsInput.val()), plusSecs: parseInt(plusSecsInput.val()), infusions: parseInt(infNumInput.val()) };
+    SetCookie("lastTimer", JSON.stringify(lastTimer));
+}
+function LoadLastTimer() {
+    //Loads last timer cookie and applies its values to the timer
+    var timerCookie = GetCookie("lastTimer");
+    if (timerCookie == "" || timerCookie == undefined) {
+        return;
+    }
+    ;
+    var lastTimer = JSON.parse(timerCookie);
+    baseSecsInput.val(lastTimer.baseSecs);
+    plusSecsInput.val(lastTimer.plusSecs);
+    infNumInput.val(lastTimer.infusions);
+}
+function SetCookie(name, value) {
+    var options = __assign({ path: '/', SameSite: "Strict", expires: "Fri, 31 Dec 9999 23:59:59 GMT" }, options);
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+    var updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    for (var optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        var optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+    document.cookie = updatedCookie;
+}
+function GetCookie(name) {
+    var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 //converts tea type names from the website's format into the local format
 function ConvertURLTeaTypeToLocal(teaType) {
@@ -310,6 +357,7 @@ function Main() {
     //create new preset on cick
     $("#btnCreatePreset").click(NewPresetFromModal);
     LoadPresets();
+    LoadLastTimer();
     //and here we begin the frame loop
     window.requestAnimationFrame(Loop);
 }
@@ -346,11 +394,13 @@ function startTimer() {
     TEATIMER.start();
     infNum++;
     infNumInput.val(infNum);
+    SaveLastTimer();
 }
 function resetTimer() {
     TEATIMER.stop();
     timerText.html(formatTimerOutput(0));
     infNumInput.val(0);
+    SaveLastTimer();
 }
 function detectMob() {
     if (navigator.userAgent.match(/Android/i) ||
