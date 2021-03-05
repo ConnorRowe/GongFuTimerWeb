@@ -73,7 +73,6 @@ function GeneratePresetContainerHTML(preset: Preset): JQuery<HTMLElement> {
 		"<div class='preset-container preset-container-" + preset.teaType + "'>",
 			"<div class='preset-controls'>",
 				"<span class='preset-delete' title='Delete'>&times;</span>",
-				"<span class='preset-delete' title='Delete'>&times;</span>",
 				"<span class='preset-edit' title='Edit'>&hellip;</span>",
 			"</div>",
 			"<h2 class='preset-name'>" + preset.name + "</h2>",
