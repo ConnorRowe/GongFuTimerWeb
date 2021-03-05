@@ -81,19 +81,19 @@ function AddPresetToDOM(preset, idOverride) {
     //add the presetid attribute which holds the preset's index in the PRESETS array
     newPresetBtn.attr("presetid", finalIndex);
     //add click event to the button which gets its presetid attribute and passes it to the ApplyPreset function
-    newPresetBtn.click(function (e) { ApplyPreset(parseInt(e.currentTarget.getAttribute("presetid"))); });
+    newPresetBtn.on("click", function (e) { ApplyPreset(parseInt(e.currentTarget.getAttribute("presetid"))); });
     //find preset controls div
     var newPresetControls = newPresetCard.children(".preset-controls");
     //find delete span
     var newPresetDelete = newPresetControls.children(".preset-delete");
     newPresetDelete.attr("presetid", finalIndex);
     //add click event
-    newPresetDelete.click(function (e) { RemovePreset(e.target.parentElement.parentElement, parseInt(e.target.getAttribute("presetid"))); });
+    newPresetDelete.on("click", function (e) { RemovePreset(e.target.parentElement.parentElement, parseInt(e.target.getAttribute("presetid"))); });
     //find edit span
     var newPresetEdit = newPresetControls.children(".preset-edit");
     newPresetEdit.attr("presetid", finalIndex);
     //add click event
-    newPresetEdit.click(function (e) {
+    newPresetEdit.on("click", function (e) {
         CURRENTPRESETID = parseInt(e.currentTarget.getAttribute("presetid"));
         //open modal
         $("#newPresetModal").css("display", "block");
@@ -269,8 +269,8 @@ function Main() {
     document.addEventListener("orientationchange", function (evt) { }, false);
     window.addEventListener("resize", function (evt) { }, false);
     //Bind button click events
-    $("#btnStart").click(startTimer);
-    $("#btnReset").click(resetTimer);
+    $("#btnStart").on("click", startTimer);
+    $("#btnReset").on("click", resetTimer);
     //Set timer display to 00:00:00
     timerText.html(formatTimerOutput(0));
     //Bind volume slider input event to set the volume of the alarm sound
@@ -282,7 +282,7 @@ function Main() {
     //get close span
     var span = $(".close");
     //open modal on click
-    btnNewPreset.click(function () {
+    btnNewPreset.on("click", function () {
         modal.css("display", "block");
         //clear modal inputs
         $("#presetName").val("");
@@ -295,13 +295,13 @@ function Main() {
         $("#presetInfusions").val("");
     });
     //close it
-    span.click(function () {
+    span.on("click", function () {
         modal.css("display", "none");
         //reset CURRENTPRESETID so if the model is opened via the new preset button, it adds a new one instead of overwriting a previously edited one
         CURRENTPRESETID = -1;
     });
     //create new preset on cick
-    $("#btnCreatePreset").click(NewPresetFromModal);
+    $("#btnCreatePreset").on("click", NewPresetFromModal);
     LoadPresets();
     LoadLastTimer();
     //and here we begin the frame loop
