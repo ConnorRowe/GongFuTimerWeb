@@ -67,22 +67,24 @@ function CreatePreset(config: Preset): { name: string; altName: string; descript
 	return newPreset;
 }
 
-function GeneratePresetContainerHTML(preset: Preset) {
-	let container: string = "<div class='preset-container preset-container-" + preset.teaType + "'>\n";
-	container += "<div class='preset-controls'>\n";
-	container += "<span class='preset-delete' title='Delete'>&times;</span>\n";
-	container += "<span class='preset-edit' title='Edit'>&hellip;</span>\n";
-	container += "</div>\n";
-	container += "<h2 class='preset-name'>" + preset.name + "</h2>\n";
-	container += "<h3 class='preset-alt-name'> " + preset.altName + "</h3>\n";
-	container += "<span class='preset-desc'>" + preset.description + "</span>\n";
-	container += "<button class='fill-up-btn dark-btn preset-select-button' type='button'><div class='fill-up-bg dark-btn'></div><div class='fill-up-stream dark-btn'></div><span class='fill-up-txt dark-btn'>Apply</span></button>\n"
-	container += "</div>\n";
+function GeneratePresetContainerHTML(preset: Preset): JQuery<HTMLElement> {
 
-	return container;
+	return $([
+		"<div class='preset-container preset-container-" + preset.teaType + "'>",
+			"<div class='preset-controls'>",
+				"<span class='preset-delete' title='Delete'>&times;</span>",
+				"<span class='preset-delete' title='Delete'>&times;</span>",
+				"<span class='preset-edit' title='Edit'>&hellip;</span>",
+			"</div>",
+			"<h2 class='preset-name'>" + preset.name + "</h2>",
+			"<h3 class='preset-alt-name'> " + preset.altName + "</h3>",
+			"<span class='preset-desc'>" + preset.description + "</span>",
+			"<button class='fill-up-btn dark-btn preset-select-button' type='button'><div class='fill-up-bg dark-btn'></div><div class='fill-up-stream dark-btn'></div><span class='fill-up-txt dark-btn'>Apply</span></button>",
+		"</div>"
+	].join("\n"));
 }
 
-function AddPresetToDOM(preset: Preset, idOverride?: number) {
+function AddPresetToDOM(preset: Preset, idOverride?: number): JQuery<HTMLElement> {
 	//get preset container div
 	const presetCntnr = $("#presetsContainer");
 	//add element to container
@@ -268,62 +270,6 @@ function GetCookie(name: string): string {
 	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-//converts tea type names from the website's format into the local format
-function ConvertURLTeaTypeToLocal(teaType: string) {
-	switch (teaType) {
-		case 'Ripened Tea':
-			return 'ripe-puerh';
-		case 'Blend':
-			return 'blend';
-		case 'Tisanes':
-			return 'tisane';
-		case 'Herbs':
-			return 'medicinal';
-		default: {
-			//the rest can simply have the tea suffix removed and have spaces replaced with hyphens (Raw PuErh Tea => raw-puerh)
-			return teaType.replace(' Tea', '').replace(' ', '-').toLowerCase();
-		}
-	}
-}
-
-function ImportFromURL() {
-	let newDoc: Document = document.implementation.createHTMLDocument("import");
-	let newURL: string = <string>urlImportInput.val();
-
-	//clear any previous error
-	urlImportError.html("");
-
-	//load webpage from URL
-	$.getJSON('https://www.whateverorigin.org/get?url=' + encodeURIComponent(newURL) + '&callback=?', (data) => {
-		//write loaded data to the new document so it can be manipulated via jQuery
-		newDoc.write(data.contents);
-
-		//create new jQuery object for the new doc
-		const jq2 = jQuery(newDoc);
-
-		//test site
-		const test: boolean = jq2.find('.brewing-instructions').length > 0;
-		if (!test) {
-			urlImportError.html("Invalid page!");
-			return;
-		}
-
-		//find all of the elements containing the data we need to make a preset
-		$("#presetName").val(jq2.find('.product-info__title').html());
-		$("#presetAltName").val(jq2.find('.product-info__subtitle').html().trim());
-		$("#presetDesc").val(jq2.find("meta[name=description]").attr("content").trim());
-		$("#presetTeaType").val(ConvertURLTeaTypeToLocal(jq2.find('.container > ol').children().eq(1).find('a > span').html()));
-		const brewGuideChildren = jq2.find('.brewing-instructions__tr').find('.brewing-instructions__value');
-		const fullTemp: string = brewGuideChildren.eq(0).html();
-		$("#presetTemp").val(parseInt(fullTemp.substring(0, fullTemp.indexOf('c') - 1)));
-		$("#presetBaseSecs").val(parseInt(brewGuideChildren.eq(2).html()));
-		$("#presetPlusSecs").val(parseInt(brewGuideChildren.eq(3).html()));
-		$("#presetInfusions").val(parseInt(brewGuideChildren.eq(4).html()));
-	})
-		//Display error message if it fails
-		.fail((jqXHR, status, error) => { urlImportError.html('Error: ' + jqXHR.status + ': ' + jqXHR.statusText); });
-}
-
 /// GLOBALS
 var KEYSTATE: boolean[] = new Array<boolean>();		//check the defined keypress
 var ISMOBILE: boolean = false;						//if running on mobile
@@ -346,8 +292,6 @@ const baseSecsInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#ba
 const plusSecsInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#plusSecs");
 const infNumInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#infNum");
 const timerText: JQuery<HTMLHeadingElement> = <JQuery<HTMLHeadingElement>>$("#time");
-const urlImportInput: JQuery<HTMLInputElement> = <JQuery<HTMLInputElement>>$("#importURL");
-const urlImportError: JQuery<HTMLLabelElement> = <JQuery<HTMLLabelElement>>$(".error__label");
 
 //Preset stuff
 var PRESETS: Preset[] = new Array<Preset>();
@@ -421,8 +365,6 @@ function Main() {
 		$("#presetBaseSecs").val("");
 		$("#presetPlusSecs").val("");
 		$("#presetInfusions").val("");
-		urlImportInput.val("");
-		urlImportError.html("");
 	});
 	//close it
 	span.click(() => {
@@ -430,9 +372,6 @@ function Main() {
 		//reset CURRENTPRESETID so if the model is opened via the new preset button, it adds a new one instead of overwriting a previously edited one
 		CURRENTPRESETID = -1;
 	});
-
-	//import from url
-	$("#btnImportURL").click(ImportFromURL);
 
 	//create new preset on cick
 	$("#btnCreatePreset").click(NewPresetFromModal);

@@ -527,16 +527,6 @@ button.dark-btn {
     }
 }
 
-.error__label {
-    color: darkred;
-}
-
-.url-import {
-    text-align: left;
-    width: 33.33%;
-    margin-bottom: -8%;
-}
-
 .brew-guide__img {
     height: 56px;
     width: 56px;
